@@ -87,6 +87,7 @@ class TodoItemsController extends Controller
         try {
             $todoItem = $service->__invoke($inputs);
         } catch (PersistenceException $e) {
+            logger()->error($e);
             return $this->responseFactory
                 ->json(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -108,9 +109,11 @@ class TodoItemsController extends Controller
             $todoItem = $service->__invoke(TodoItemId::of($id));
 
         } catch (EntityNotFoundException $e) {
+            logger()->error($e);
             return $this->responseFactory->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
 
         } catch (PersistenceException $e) {
+            logger()->error($e);
             return $this->responseFactory->json(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
