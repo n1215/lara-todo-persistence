@@ -41,7 +41,6 @@ class CompleteTodoItem
             throw new EntityNotFoundException('entity not found. id=' . $id->getValue());
         }
 
-        $todoItem->save();
         $todoItem->markAsCompleted();
         return $this->repository->persist($todoItem);
     }
