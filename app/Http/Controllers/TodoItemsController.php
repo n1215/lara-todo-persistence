@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace N1215\LaraTodo\Http\Controllers;
 
-use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use N1215\LaraTodo\Common\TodoItemId;
 use N1215\LaraTodo\Exceptions\EntityNotFoundException;
 use N1215\LaraTodo\Exceptions\PersistenceException;
 use N1215\LaraTodo\Http\Requests\AddTodoItemRequest;
-use N1215\LaraTodo\Presentations\TodoItemJsonSerializer;
+use N1215\LaraTodo\Http\Responders\TodoItemResponder;
 use N1215\LaraTodo\Service\AddTodoItem;
 use N1215\LaraTodo\Service\ListTodoItems;
 use N1215\LaraTodo\Service\CompleteTodoItem;
@@ -22,65 +22,54 @@ use N1215\LaraTodo\Service\ShowTodoItem;
 class TodoItemsController extends Controller
 {
     /**
-     * @var ResponseFactory
+     * @var TodoItemResponder
      */
-    private $responseFactory;
-
-    /**
-     * @var TodoItemJsonSerializer
-     */
-    private $jsonSerializer;
+    private $responder;
 
     /**
      * コンストラクタ
-     * @param ResponseFactory $responseFactory
-     * @param TodoItemJsonSerializer $jsonSerializer
+     * @param TodoItemResponder $responder
      */
-    public function __construct(ResponseFactory $responseFactory, TodoItemJsonSerializer $jsonSerializer)
+    public function __construct(TodoItemResponder $responder)
     {
-        $this->responseFactory = $responseFactory;
-        $this->jsonSerializer = $jsonSerializer;
+        $this->responder = $responder;
     }
 
     /**
      * Todo項目の一覧を取得
      * @param ListTodoItems $service
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function list(ListTodoItems $service)
+    public function list(ListTodoItems $service): JsonResponse
     {
         $todoItems = $service->__invoke();
-        $json = $this->jsonSerializer->serializeCollection($todoItems);
-
-        return $this->responseFactory->json($json, Response::HTTP_OK);
+        return $this->responder->withEntityCollection($todoItems);
     }
 
     /**
      * Todo項目の詳細を取得
      * @param int $id
      * @param ShowTodoItem $service
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function show(int $id, ShowTodoItem $service)
+    public function show(int $id, ShowTodoItem $service): JsonResponse
     {
         try {
             $todoItem = $service->__invoke(TodoItemId::of($id));
         } catch (EntityNotFoundException $e) {
-            return $this->responseFactory->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+            return $this->responder->error($e, Response::HTTP_NOT_FOUND);
         }
 
-        $json = $this->jsonSerializer->serialize($todoItem);
-
-        return $this->responseFactory->json($json, Response::HTTP_OK);
+        return $this->responder->withEntity($todoItem);
     }
 
     /**
      * Todo項目を追加する
      * @param AddTodoItemRequest $request
      * @param AddTodoItem $service
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function add(AddTodoItemRequest $request, AddTodoItem $service)
+    public function add(AddTodoItemRequest $request, AddTodoItem $service): JsonResponse
     {
         $inputs = $request->only(['title']);
 
@@ -88,37 +77,30 @@ class TodoItemsController extends Controller
             $todoItem = $service->__invoke($inputs);
         } catch (PersistenceException $e) {
             logger()->error($e);
-            return $this->responseFactory
-                ->json(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->responder->error($e);
         }
 
-        $json = $this->jsonSerializer->serialize($todoItem);
-
-        return $this->responseFactory->json($json, Response::HTTP_CREATED);
+        return $this->responder->withEntity($todoItem, Response::HTTP_CREATED);
     }
 
     /**
      * Todo項目を完了にする
      * @param int $id
      * @param CompleteTodoItem $service
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function complete(int $id, CompleteTodoItem $service)
+    public function complete(int $id, CompleteTodoItem $service): JsonResponse
     {
         try {
             $todoItem = $service->__invoke(TodoItemId::of($id));
-
         } catch (EntityNotFoundException $e) {
             logger()->error($e);
-            return $this->responseFactory->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
-
+            return $this->responder->error($e, Response::HTTP_NOT_FOUND);
         } catch (PersistenceException $e) {
             logger()->error($e);
-            return $this->responseFactory->json(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->responder->error($e);
         }
 
-        $json = $this->jsonSerializer->serialize($todoItem);
-
-        return $this->responseFactory->json($json, Response::HTTP_OK);
+        return $this->responder->withEntity($todoItem);
     }
 }
