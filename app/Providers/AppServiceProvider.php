@@ -9,15 +9,24 @@ use N1215\LaraTodo\Impls;
 class AppServiceProvider extends ServiceProvider
 {
     /**
+     * レポジトリの実装クラス一覧
+     * @var array
+     */
+    private $repositoryClasses = [
+        1 => Impls\EloquentAsEntity\TodoItemRepository::class,
+        2 => Impls\EntityContainsEloquent\TodoItemRepository::class,
+        3 => Impls\POPOAndEloquent\TodoItemRepository::class,
+        4 => Impls\POPOAndQueryBuilder\TodoItemRepository::class,
+    ];
+
+    /**
      * Register any application services.
      *
      * @return void
      */
     public function register()
     {
-        // レポジトリの実装切り替え可
-        $this->app->singleton(TodoItemRepositoryInterface::class, Impls\EloquentAsEntity\TodoItemRepository::class);
-//        $this->app->singleton(TodoItemRepositoryInterface::class, Impls\EntityContainsEloquent\TodoItemRepository::class);
-//        $this->app->singleton(TodoItemRepositoryInterface::class, Impls\POPOAndEloquent\TodoItemRepository::class);
+        // レポジトリの実装切り替え可 パターン 1〜4
+        $this->app->singleton(TodoItemRepositoryInterface::class, $this->repositoryClasses[1]);
     }
 }
