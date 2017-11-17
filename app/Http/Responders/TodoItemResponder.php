@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace N1215\LaraTodo\Http\Responders;
 
-use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -17,60 +16,52 @@ use N1215\LaraTodo\Presentations\TodoItemJsonSerializer;
 class TodoItemResponder
 {
     /**
-     * @var ResponseFactory
-     */
-    private $responseFactory;
-
-    /**
      * @var TodoItemJsonSerializer
      */
     private $serializer;
 
     /**
      * コンストラクタ
-     * @param ResponseFactory $responseFactory
      * @param TodoItemJsonSerializer $serializer
      */
-    public function __construct(ResponseFactory $responseFactory, TodoItemJsonSerializer $serializer)
+    public function __construct(TodoItemJsonSerializer $serializer)
     {
-        $this->responseFactory = $responseFactory;
         $this->serializer = $serializer;
     }
 
     /**
      * Todo項目エンティティの情報でレスポンスを返す
      * @param TodoItemInterface $todoItem
-     * @param int $code
+     * @param int $status
      * @return JsonResponse
      */
-    public function withEntity(TodoItemInterface $todoItem, $code = Response::HTTP_OK): JsonResponse
+    public function withEntity(TodoItemInterface $todoItem, $status = Response::HTTP_OK): JsonResponse
     {
-        return $this->responseFactory->json($this->serializer->serialize($todoItem), $code);
+        return new JsonResponse($this->serializer->serialize($todoItem), $status);
     }
 
     /**
      * Todo項目エンティティのコレクションの情報でレスポンスを返す
      * @param Collection|TodoItemInterface[] $todoItems
-     * @param int $code
+     * @param int $status
      * @return JsonResponse
      */
-    public function withEntityCollection(Collection $todoItems, $code = Response::HTTP_OK): JsonResponse
+    public function withEntityCollection(Collection $todoItems, $status = Response::HTTP_OK): JsonResponse
     {
-        return $this->responseFactory->json($this->serializer->serializeCollection($todoItems), $code);
+        return new JsonResponse($this->serializer->serializeCollection($todoItems), $status);
     }
-
 
     /**
      * エラーのレスポンスを返す
      * @param \Exception $e
-     * @param int $code
+     * @param int $status
      * @return JsonResponse
      */
-    public function error(\Exception $e, $code = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
+    public function error(\Exception $e, $status = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
     {
-        return $this->responseFactory->json([
+        return new JsonResponse([
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
-        ], $code);
+        ], $status);
     }
 }
