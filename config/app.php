@@ -172,8 +172,6 @@ return [
          * Application Service Providers...
          */
         N1215\LaraTodo\Providers\AppServiceProvider::class,
-        N1215\LaraTodo\Providers\AuthServiceProvider::class,
-        // N1215\LaraTodo\Providers\BroadcastServiceProvider::class,
         N1215\LaraTodo\Providers\EventServiceProvider::class,
         N1215\LaraTodo\Providers\RouteServiceProvider::class,
 
