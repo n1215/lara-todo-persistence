@@ -15,6 +15,8 @@ use Illuminate\Routing\Router;
 |
 */
 
+$router->pattern('id', '[0-9]+');
+
 $router->group(['prefix' => 'todo'], function(Router $router) {
     $router->get('/', 'TodoItemsController@list')->name('todo.items.list');
     $router->get('/{id}', 'TodoItemsController@show')->name('todo.items.show');
