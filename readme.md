@@ -15,4 +15,4 @@
 - [3 POPOのEntityとEloquent Model](app/Impls/POPOAndEloquent)
 - [4 POPOのEntityとQuery Builder](app/Impls/POPOAndQueryBuilder)
 - [5 POPOのEntityとPDO](app/Impls/POPOAndPDO)
-- [6 POPOのEntityとAtlas](app/Impls/POPOAndAtlas)
+- [6 POPOのEntityとAtlas](app/Impls/POPOAndAtlas) ※ Atlas → [http://atlasphp.io/](http://atlasphp.io/)
