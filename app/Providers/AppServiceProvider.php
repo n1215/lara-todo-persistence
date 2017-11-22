@@ -2,6 +2,8 @@
 
 namespace N1215\LaraTodo\Providers;
 
+use Atlas\Orm\Atlas;
+use Atlas\Orm\AtlasContainer;
 use Illuminate\Support\ServiceProvider;
 use N1215\LaraTodo\Common\TodoItemRepositoryInterface;
 use N1215\LaraTodo\Impls;
@@ -18,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
         3 => Impls\POPOAndEloquent\TodoItemRepository::class,
         4 => Impls\POPOAndQueryBuilder\TodoItemRepository::class,
         5 => Impls\POPOAndPDO\TodoItemRepository::class,
+        6 => Impls\POPOAndAtlas\TodoItemRepository::class,
     ];
 
     /**
@@ -36,6 +39,17 @@ class AppServiceProvider extends ServiceProvider
                 new Impls\POPOAndPDO\TodoItemFactory(),
                 new \PDO('sqlite:'. config('database.connections.sqlite.database'))
             );
+        });
+
+        // Atlas用の設定
+        $this->app->singleton(Atlas::class, function () {
+           $atlasContainer = new AtlasContainer('sqlite:'. config('database.connections.sqlite.database'));
+
+           $atlasContainer->setMappers([
+               Impls\POPOAndAtlas\TodoItemMapper::class,
+           ]);
+
+           return $atlasContainer->getAtlas();
         });
     }
 }
