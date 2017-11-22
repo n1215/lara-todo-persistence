@@ -15,7 +15,7 @@ class TodoItemTest extends TestCase
     /**
      * @testdox IDを取得できる
      * @param callable $entityFactory
-     * @dataProvider dataProvider_callables
+     * @dataProvider dataProvider_entityFactories
      */
     public function test_getId(callable $entityFactory)
     {
@@ -34,7 +34,7 @@ class TodoItemTest extends TestCase
     /**
      * @testdox タイトルを取得できる
      * @param callable $entityFactory
-     * @dataProvider dataProvider_callables
+     * @dataProvider dataProvider_entityFactories
      */
     public function test_getTitle(callable $entityFactory)
     {
@@ -53,7 +53,7 @@ class TodoItemTest extends TestCase
     /**
      * @testdox 完了済みかどうか判定できる
      * @param callable $entityFactory
-     * @dataProvider dataProvider_callables
+     * @dataProvider dataProvider_entityFactories
      */
     public function test_isCompleted(callable $entityFactory)
     {
@@ -72,7 +72,7 @@ class TodoItemTest extends TestCase
     /**
      * @testdox 完了済みにできる
      * @param callable $entityFactory
-     * @dataProvider dataProvider_callables
+     * @dataProvider dataProvider_entityFactories
      */
     public function test_markAsCompleted(callable $entityFactory)
     {
@@ -88,7 +88,7 @@ class TodoItemTest extends TestCase
         $this->assertTrue($todoItem->isCompleted());
     }
 
-    public function dataProvider_callables(): array
+    public function dataProvider_entityFactories(): array
     {
         return [
             // パターン1
