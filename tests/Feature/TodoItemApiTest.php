@@ -45,6 +45,9 @@ class TodoItemApiTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(['id' => 1, 'title' => $title, 'is_completed' => true]);
 
+        $response = $this->put('/todo/2');
+        $response->assertStatus(404);
+
         $response = $this->get('/todo');
         $response->assertStatus(200);
         $response->assertJson([
