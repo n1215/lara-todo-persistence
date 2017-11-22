@@ -17,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
         2 => Impls\EntityContainsEloquent\TodoItemRepository::class,
         3 => Impls\POPOAndEloquent\TodoItemRepository::class,
         4 => Impls\POPOAndQueryBuilder\TodoItemRepository::class,
+        5 => Impls\POPOAndPDO\TodoItemRepository::class,
     ];
 
     /**
@@ -27,6 +28,14 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         // レポジトリの実装切り替え可 パターン 1〜4
-        $this->app->singleton(TodoItemRepositoryInterface::class, $this->repositoryClasses[1]);
+        $this->app->singleton(TodoItemRepositoryInterface::class, $this->repositoryClasses[5]);
+
+        // PDO用の設定
+        $this->app->singleton(Impls\POPOAndPDO\TodoItemRepository::class, function () {
+            return new Impls\POPOAndPDO\TodoItemRepository(
+                new Impls\POPOAndPDO\TodoItemFactory(),
+                new \PDO('sqlite:'. config('database.connections.sqlite.database'))
+            );
+        });
     }
 }
