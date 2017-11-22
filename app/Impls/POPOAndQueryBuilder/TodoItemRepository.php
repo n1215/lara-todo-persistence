@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace N1215\LaraTodo\Impls\POPOAndQueryBuilder;
 
+use Carbon\Carbon;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Collection;
 use N1215\LaraTodo\Common\TodoItemId;
@@ -81,9 +82,11 @@ class TodoItemRepository implements TodoItemRepositoryInterface
         $rawId = $todoItem->getId()->getValue();
         $completedAt = $todoItem->getCompletedAt()->getValue();
         $rawCompletedAt = $completedAt ? $completedAt->format('Y-m-d H:i:s') : null;
+        $now = Carbon::now()->format('Y-m-d H:i:s');
         $values = [
             'title' => $todoItem->getTitle()->getValue(),
-            'completed_at' => $rawCompletedAt
+            'completed_at' => $rawCompletedAt,
+            'updated_at' => $now,
         ];
 
         // 更新
@@ -100,6 +103,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
 
         // 新規追加
         try {
+            $values['created_at'] = $now;
             $rawId = $this->conn->table(self::TABLE_NAME)->insertGetId($values);
         } catch(\Exception $e) {
             throw new PersistenceException('Todo項目の永続化に失敗しました。title=' . $todoItem->getTitle()->getValue(), 0, $e);

@@ -67,6 +67,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
             throw new \InvalidArgumentException('このリポジトリで永続化できるエンティティは' . TodoItem::class. 'のみです');
         }
 
+        /** @var TodoItemRecord|null $record */
         $record = TodoItemRecord::query()->find($todoItem->getId()->getValue());
 
         if (is_null($record)) {

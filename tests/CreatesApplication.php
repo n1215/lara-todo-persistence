@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace N1215\LaraTodo;
 
 use Illuminate\Contracts\Console\Kernel;
 

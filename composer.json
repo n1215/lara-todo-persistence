@@ -20,8 +20,7 @@
     },
     "autoload": {
         "classmap": [
-            "database/seeds",
-            "database/factories"
+            "database/seeds"
         ],
         "psr-4": {
             "N1215\\LaraTodo\\": "app/"

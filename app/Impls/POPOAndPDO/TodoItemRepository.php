@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace N1215\LaraTodo\Impls\POPOAndPDO;
 
+use Carbon\Carbon;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Collection;
 use N1215\LaraTodo\Common\TodoItemId;
@@ -21,9 +22,9 @@ class TodoItemRepository implements TodoItemRepositoryInterface
 
     const SQL_SELECT_ALL = "select * from todo_items";
 
-    const SQL_INSERT = "insert into todo_items (title, completed_at) VALUES (:title, :completed_at)";
+    const SQL_INSERT = "insert into todo_items (title, completed_at, created_at, updated_at) VALUES (:title, :completed_at, :created_at, :updated_at)";
 
-    const SQL_UPDATE = "update todo_items set title = :title, completed_at = :completed_at where id = :id";
+    const SQL_UPDATE = "update todo_items set title = :title, completed_at = :completed_at, updated_at = :updated_at where id = :id";
 
     /**
      * @var TodoItemFactory
@@ -56,7 +57,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
         $record = $statement->fetch();
         $statement->closeCursor();
 
-        if (is_null($record)) {
+        if (!$record) {
             return null;
         }
 
@@ -90,9 +91,10 @@ class TodoItemRepository implements TodoItemRepositoryInterface
         $rawId = $todoItem->getId()->getValue();
         $completedAt = $todoItem->getCompletedAt()->getValue();
         $rawCompletedAt = $completedAt ? $completedAt->format('Y-m-d H:i:s') : null;
+        $now = Carbon::now()->format('Y-m-d H:i:s');
         $values = [
             'title' => $todoItem->getTitle()->getValue(),
-            'completed_at' => $rawCompletedAt
+            'completed_at' => $rawCompletedAt,
         ];
 
         // 更新
@@ -101,6 +103,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
                 $statement = $this->pdo->prepare(self::SQL_UPDATE);
                 $statement->bindParam(':title', $values['title']);
                 $statement->bindParam(':completed_at', $values['completed_at']);
+                $statement->bindParam(':updated_at', $now);
                 $statement->bindParam(':id', $rawId);
                 $statement->execute();
             } catch(\Exception $e) {
@@ -116,6 +119,8 @@ class TodoItemRepository implements TodoItemRepositoryInterface
             $statement = $this->pdo->prepare(self::SQL_INSERT);
             $statement->bindParam(':title', $values['title']);
             $statement->bindParam(':completed_at', $values['completed_at']);
+            $statement->bindParam(':created_at', $now);
+            $statement->bindParam(':updated_at', $now);
             $statement->execute();
             $rawId = $this->pdo->lastInsertId();
         } catch(\Exception $e) {
