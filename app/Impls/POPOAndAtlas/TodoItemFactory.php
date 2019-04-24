@@ -8,6 +8,7 @@ use N1215\LaraTodo\Common\CompletedAt;
 use N1215\LaraTodo\Common\Title;
 use N1215\LaraTodo\Common\TodoItemId;
 use N1215\LaraTodo\Common\TodoItemInterface;
+use N1215\LaraTodo\Impls\POPOAndAtlas\TodoItem\TodoItemRecord;
 
 /**
  * POPOのエンティティ実装のファクトリ
@@ -24,7 +25,7 @@ class TodoItemFactory
     public function fromRecord(TodoItemRecord $record): TodoItemInterface
     {
         return new TodoItem(
-            TodoItemId::of(intval($record->id)),
+            TodoItemId::of((int) $record->id),
             Title::of($record->title),
             CompletedAt::of(isset($record->completed_at) ? new Carbon($record->completed_at) : null)
         );
@@ -38,7 +39,7 @@ class TodoItemFactory
     public function fromArray(array $record): TodoItem
     {
         return new TodoItem(
-            TodoItemId::of(isset($record['id']) ? intval($record['id']) : null),
+            TodoItemId::of(isset($record['id']) ? (int) $record['id'] : null),
             Title::of($record['title']),
             CompletedAt::of(isset($record['completed_at']) ? new Carbon($record['completed_at']) : null)
         );

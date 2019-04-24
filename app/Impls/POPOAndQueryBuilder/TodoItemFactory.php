@@ -23,7 +23,7 @@ class TodoItemFactory
     public function fromArray(array $record): TodoItem
     {
         return new TodoItem(
-            TodoItemId::of(isset($record['id']) ? intval($record['id']) : null),
+            TodoItemId::of(isset($record['id']) ? (int) $record['id'] : null),
             Title::of($record['title']),
             CompletedAt::of(isset($record['completed_at']) ? new Carbon($record['completed_at']) : null)
         );

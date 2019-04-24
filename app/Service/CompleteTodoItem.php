@@ -7,6 +7,7 @@ use N1215\LaraTodo\Common\TodoItemId;
 use N1215\LaraTodo\Common\TodoItemInterface;
 use N1215\LaraTodo\Common\TodoItemRepositoryInterface;
 use N1215\LaraTodo\Exceptions\EntityNotFoundException;
+use N1215\LaraTodo\Exceptions\PersistenceException;
 
 /**
  * Todo項目を完了済みにする
@@ -32,12 +33,13 @@ class CompleteTodoItem
      * @param TodoItemId $id
      * @return TodoItemInterface
      * @throws EntityNotFoundException
+     * @throws PersistenceException
      */
     public function __invoke(TodoItemId $id): TodoItemInterface
     {
         $todoItem = $this->repository->find($id);
 
-        if (is_null($todoItem)) {
+        if ($todoItem === null) {
             throw new EntityNotFoundException('entity not found. id=' . $id->getValue());
         }
 

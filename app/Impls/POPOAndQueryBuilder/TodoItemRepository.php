@@ -18,7 +18,7 @@ use N1215\LaraTodo\Exceptions\PersistenceException;
  */
 class TodoItemRepository implements TodoItemRepositoryInterface
 {
-    const TABLE_NAME = 'todo_items';
+    private const TABLE_NAME = 'todo_items';
 
     /**
      * @var TodoItemFactory
@@ -48,7 +48,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
             ->table(self::TABLE_NAME)
             ->find($id->getValue());
 
-        if (is_null($record)) {
+        if ($record === null) {
             return null;
         }
 
@@ -90,11 +90,10 @@ class TodoItemRepository implements TodoItemRepositoryInterface
         ];
 
         // 更新
-        if (!is_null($rawId)) {
+        if ($rawId !== null) {
             try {
                 $this->conn->table(self::TABLE_NAME)->where('id', $rawId)->update($values);
             } catch(\Exception $e) {
-                logger()->error($e);
                 throw new PersistenceException('Todo項目の永続化に失敗しました。title=' . $todoItem->getTitle()->getValue(), 0, $e);
             }
 

@@ -14,7 +14,7 @@ use N1215\LaraTodo\TestCase;
 
 class TodoItemRepositoryTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -29,7 +29,7 @@ class TodoItemRepositoryTest extends TestCase
      * @param string $repositoryClass
      * @dataProvider dataProvider_repositoryClasses
      */
-    public function test_new(string $repositoryClass)
+    public function test_new(string $repositoryClass): void
     {
         /** @var TodoItemRepositoryInterface $repository */
         $repository = $this->app->make($repositoryClass);
@@ -48,7 +48,7 @@ class TodoItemRepositoryTest extends TestCase
      * @param string $repositoryClass
      * @dataProvider dataProvider_repositoryClasses
      */
-    public function test_persist_new_entity(string $repositoryClass)
+    public function test_persist_new_entity(string $repositoryClass): void
     {
         /** @var TodoItemRepositoryInterface $repository */
         $repository = $this->app->make($repositoryClass);
@@ -82,7 +82,7 @@ class TodoItemRepositoryTest extends TestCase
      * @param string $repositoryClass
      * @dataProvider dataProvider_repositoryClasses
      */
-    public function test_persist_when_entity_exist(string $repositoryClass)
+    public function test_persist_when_entity_exist(string $repositoryClass): void
     {
         /** @var TodoItemRepositoryInterface $repository */
         $repository = $this->app->make($repositoryClass);
@@ -120,7 +120,7 @@ class TodoItemRepositoryTest extends TestCase
      * @param string $repositoryClass
      * @dataProvider dataProvider_repositoryClasses
      */
-    public function test_find_returns_entity(string $repositoryClass)
+    public function test_find_returns_entity(string $repositoryClass): void
     {
         /** @var TodoItemRepositoryInterface $repository */
         $repository = $this->app->make($repositoryClass);
@@ -141,7 +141,7 @@ class TodoItemRepositoryTest extends TestCase
      * @param string $repositoryClass
      * @dataProvider dataProvider_repositoryClasses
      */
-    public function test_find_returns_null_when_entity_not_exist(string $repositoryClass)
+    public function test_find_returns_null_when_entity_not_exist(string $repositoryClass): void
     {
         /** @var TodoItemRepositoryInterface $repository */
         $repository = $this->app->make($repositoryClass);
@@ -160,7 +160,7 @@ class TodoItemRepositoryTest extends TestCase
      * @param string $repositoryClass
      * @dataProvider dataProvider_repositoryClasses
      */
-    public function test_list_returns_all_entities(string $repositoryClass)
+    public function test_list_returns_all_entities(string $repositoryClass): void
     {
         /** @var TodoItemRepositoryInterface $repository */
         $repository = $this->app->make($repositoryClass);

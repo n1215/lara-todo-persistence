@@ -43,13 +43,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Atlas用の設定
         $this->app->singleton(Atlas::class, function () {
-           $atlasContainer = new AtlasContainer('sqlite:'. config('database.connections.sqlite.database'));
-
-           $atlasContainer->setMappers([
-               Impls\POPOAndAtlas\TodoItemMapper::class,
-           ]);
-
-           return $atlasContainer->getAtlas();
+            return Atlas::new(
+                'sqlite:'. config('database.connections.sqlite.database')
+            );
         });
     }
 }

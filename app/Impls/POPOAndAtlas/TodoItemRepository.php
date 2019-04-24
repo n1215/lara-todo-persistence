@@ -10,6 +10,8 @@ use N1215\LaraTodo\Common\TodoItemId;
 use N1215\LaraTodo\Common\TodoItemInterface;
 use N1215\LaraTodo\Common\TodoItemRepositoryInterface;
 use N1215\LaraTodo\Exceptions\PersistenceException;
+use N1215\LaraTodo\Impls\POPOAndAtlas\TodoItem\TodoItem as TodoItemMapper;
+use N1215\LaraTodo\Impls\POPOAndAtlas\TodoItem\TodoItemRecord;
 
 /**
  * POPOのエンティティのためのAtlas.Ormによるレポジトリ
@@ -45,7 +47,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
         /** @var TodoItemRecord $record */
         $record = $this->atlas->fetchRecord(TodoItemMapper::class, $id->getValue());
 
-        if (is_null($record)) {
+        if ($record === null) {
             return null;
         }
 
@@ -80,7 +82,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
         $now = Carbon::now()->format('Y-m-d H:i:s');
 
         /** @var TodoItemRecord $record */
-        if (is_null($todoItem->getId()->getValue())) {
+        if ($todoItem->getId()->getValue() === null) {
             $record = $this->atlas->newRecord(TodoItemMapper::class);
             $record->created_at = $now;
         } else {
@@ -93,8 +95,10 @@ class TodoItemRepository implements TodoItemRepositoryInterface
             : null;
         $record->updated_at = $now;
 
-        if (!$this->atlas->persist($record)) {
-            throw new PersistenceException('Todo項目の永続化に失敗しました。title=' . $todoItem->getTitle()->getValue());
+        try {
+            $this->atlas->persist($record);
+        } catch (\Exception $e) {
+            throw new PersistenceException('Todo項目の永続化に失敗しました。title=' . $todoItem->getTitle()->getValue(), 0, $e);
         }
 
         return $this->factory->fromRecord($record);

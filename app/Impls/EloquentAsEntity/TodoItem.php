@@ -45,7 +45,7 @@ class TodoItem extends Model implements TodoItemInterface
      */
     public function isCompleted(?Carbon $datetime = null): bool
     {
-        if (is_null($datetime)) {
+        if ($datetime === null) {
             $datetime = Carbon::now();
         }
         return CompletedAt::of($this->completed_at)->isPast($datetime);
@@ -54,9 +54,9 @@ class TodoItem extends Model implements TodoItemInterface
     /**
      * @inheritdoc
      */
-    public function markAsCompleted(?Carbon $datetime = null)
+    public function markAsCompleted(?Carbon $datetime = null): void
     {
-        if (is_null($datetime)) {
+        if ($datetime === null) {
             $datetime = Carbon::now();
         }
         $this->completed_at = $datetime;

@@ -50,7 +50,7 @@ class TodoItem implements TodoItemInterface
      */
     public function isCompleted(?Carbon $datetime = null): bool
     {
-        if (is_null($datetime)) {
+        if ($datetime === null) {
             $datetime = Carbon::now();
         }
         return CompletedAt::of($this->record->completed_at)->isPast($datetime);
@@ -59,9 +59,9 @@ class TodoItem implements TodoItemInterface
     /**
      * @inheritdoc
      */
-    public function markAsCompleted(?Carbon $datetime = null)
+    public function markAsCompleted(?Carbon $datetime = null): void
     {
-        if (is_null($datetime)) {
+        if ($datetime === null) {
             $datetime = Carbon::now();
         }
         $this->record->completed_at = $datetime;
@@ -70,7 +70,7 @@ class TodoItem implements TodoItemInterface
     /**
      * @return TodoItemRecord
      */
-    public function getRecord()
+    public function getRecord(): TodoItemRecord
     {
         return $this->record;
     }

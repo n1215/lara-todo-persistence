@@ -10,7 +10,7 @@ use N1215\LaraTodo\Impls;
 
 class TodoItemApiTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -24,7 +24,7 @@ class TodoItemApiTest extends TestCase
      * @param string $repositoryClass
      * @dataProvider dataProvider_repositoryClasses
      */
-    public function test_crud(string $repositoryClass)
+    public function test_crud(string $repositoryClass): void
     {
         $this->app->forgetInstance(TodoItemRepositoryInterface::class);
         $this->app->singleton(TodoItemRepositoryInterface::class, $repositoryClass);

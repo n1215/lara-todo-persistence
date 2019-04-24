@@ -37,7 +37,7 @@ class ShowTodoItem
     {
         $todoItem = $this->repository->find($id);
 
-        if (is_null($todoItem)) {
+        if ($todoItem === null) {
             throw new EntityNotFoundException('entity not found. id=' . $id->getValue());
         }
 

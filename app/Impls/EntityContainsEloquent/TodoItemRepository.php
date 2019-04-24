@@ -19,7 +19,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
         /** @var TodoItemRecord $record */
         $record = TodoItemRecord::query()->find($id->getValue());
 
-        if (is_null($record)) {
+        if ($record === null) {
             return null;
         }
 

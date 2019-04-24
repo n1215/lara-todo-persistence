@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace N1215\LaraTodo\Impls\POPOAndPDO;
 
 use Carbon\Carbon;
-use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Collection;
 use N1215\LaraTodo\Common\TodoItemId;
 use N1215\LaraTodo\Common\TodoItemInterface;
@@ -18,13 +17,13 @@ use N1215\LaraTodo\Exceptions\PersistenceException;
  */
 class TodoItemRepository implements TodoItemRepositoryInterface
 {
-    const SQL_SELECT = "select * from todo_items where id = :id limit 1";
+    private const SQL_SELECT = 'select * from todo_items where id = :id limit 1';
 
-    const SQL_SELECT_ALL = "select * from todo_items";
+    private const SQL_SELECT_ALL = 'select * from todo_items';
 
-    const SQL_INSERT = "insert into todo_items (title, completed_at, created_at, updated_at) VALUES (:title, :completed_at, :created_at, :updated_at)";
+    private const SQL_INSERT = 'insert into todo_items (title, completed_at, created_at, updated_at) VALUES (:title, :completed_at, :created_at, :updated_at)';
 
-    const SQL_UPDATE = "update todo_items set title = :title, completed_at = :completed_at, updated_at = :updated_at where id = :id";
+    private const SQL_UPDATE = 'update todo_items set title = :title, completed_at = :completed_at, updated_at = :updated_at where id = :id';
 
     /**
      * @var TodoItemFactory
@@ -98,7 +97,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
         ];
 
         // 更新
-        if (!is_null($rawId)) {
+        if ($rawId !== null) {
             try {
                 $statement = $this->pdo->prepare(self::SQL_UPDATE);
                 $statement->bindParam(':title', $values['title']);
@@ -107,7 +106,6 @@ class TodoItemRepository implements TodoItemRepositoryInterface
                 $statement->bindParam(':id', $rawId);
                 $statement->execute();
             } catch(\Exception $e) {
-                logger()->error($e);
                 throw new PersistenceException('Todo項目の永続化に失敗しました。title=' . $todoItem->getTitle()->getValue(), 0, $e);
             }
 

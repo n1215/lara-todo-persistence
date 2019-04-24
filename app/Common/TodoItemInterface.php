@@ -33,7 +33,7 @@ interface TodoItemInterface
     /**
      * 指定した時間で完了済みとする
      * @param Carbon|null $datetime 省略した場合は現在日時を用いる
-     * @return mixed
+     * @return void
      */
-    public function markAsCompleted(?Carbon $datetime = null);
+    public function markAsCompleted(?Carbon $datetime = null): void;
 }
