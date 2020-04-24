@@ -24,11 +24,13 @@ cd laravel
 composer config repositories.local path "../lara-todo-persistence"
 composer require n1215/lara-todo-persistence
 
+# .envのDBドライバを変更 sqliteが手軽
+
 # マイグレーション
 php artisan migrate
 ```
 
-# Web API
+## Web API
 ```
 cd lara-todo-app/laravel
 php artisan serve
