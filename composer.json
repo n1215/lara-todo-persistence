@@ -1,24 +1,22 @@
 {
-    "name": "n1215/lara-todo",
-    "type": "project",
+    "name": "n1215/lara-todo-persistence",
+    "type": "library",
     "description": "Laravel Eloquent and Persistence",
     "keywords": ["framework", "laravel", "ddd", "persistence"],
     "license": "MIT",
     "require": {
         "php": "^7.1.3",
         "ext-pdo": "*",
-        "fideloper/proxy": "^4.0",
-        "laravel/framework": "5.8.*",
-        "laravel/tinker": "^1.0",
+        "ext-json": "*",
+        "illuminate/database": ">=5.8",
+        "illuminate/http": ">=5.8",
+        "illuminate/routing": ">=5.8",
+        "illuminate/support": ">=5.8",
         "atlas/orm": "^3.0"
     },
     "require-dev": {
-        "beyondcode/laravel-dump-server": "^1.0",
-        "filp/whoops": "^2.0",
-        "fzaninotto/faker": "^1.4",
-        "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^7.5",
+        "laravel/framework": ">=5.8",
+        "phpunit/phpunit": "^8.0",
         "atlas/cli": "^2.2"
     },
     "config": {
@@ -28,36 +26,25 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
+            "providers": [
+                "N1215\\LaraTodo\\Providers\\TodoServiceProvider"
             ]
         }
     },
     "autoload": {
         "psr-4": {
-            "N1215\\LaraTodo\\": "app/"
-        },
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ]
+            "N1215\\LaraTodo\\": "src/"
+        }
     },
     "autoload-dev": {
         "psr-4": {
             "N1215\\LaraTodo\\": "tests/"
         }
     },
-    "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
-        ],
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ],
-        "post-create-project-cmd": [
-            "@php artisan key:generate --ansi"
+        "test": [
+            "vendor/bin/phpunit"
         ]
     }
 }

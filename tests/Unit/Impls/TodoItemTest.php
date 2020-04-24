@@ -1,13 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
-namespace N1215\LaraTodo\Impls;
+namespace N1215\LaraTodo\Unit\Impls;
 
 use Carbon\Carbon;
 use N1215\LaraTodo\Common\CompletedAt;
 use N1215\LaraTodo\Common\Title;
 use N1215\LaraTodo\Common\TodoItemId;
 use N1215\LaraTodo\Common\TodoItemInterface;
+use N1215\LaraTodo\Impls;
 use N1215\LaraTodo\TestCase;
 
 class TodoItemTest extends TestCase
@@ -17,7 +19,7 @@ class TodoItemTest extends TestCase
      * @param callable $entityFactory
      * @dataProvider dataProvider_entityFactories
      */
-    public function test_getId(callable $entityFactory)
+    public function test_getId(callable $entityFactory): void
     {
         $attributes = [
             'id' => 1,
@@ -36,7 +38,7 @@ class TodoItemTest extends TestCase
      * @param callable $entityFactory
      * @dataProvider dataProvider_entityFactories
      */
-    public function test_getTitle(callable $entityFactory)
+    public function test_getTitle(callable $entityFactory): void
     {
         $attributes = [
             'id' => 1,
@@ -55,7 +57,7 @@ class TodoItemTest extends TestCase
      * @param callable $entityFactory
      * @dataProvider dataProvider_entityFactories
      */
-    public function test_isCompleted(callable $entityFactory)
+    public function test_isCompleted(callable $entityFactory): void
     {
         $dataSets = [
             true => ['id' => 1, 'title' => 'Complete', 'completed_at' =>  Carbon::parse('2017-11-22 10:00:00')],
@@ -74,7 +76,7 @@ class TodoItemTest extends TestCase
      * @param callable $entityFactory
      * @dataProvider dataProvider_entityFactories
      */
-    public function test_markAsCompleted(callable $entityFactory)
+    public function test_markAsCompleted(callable $entityFactory): void
     {
         $attributes = [
             'id' => 1,
@@ -93,17 +95,17 @@ class TodoItemTest extends TestCase
         return [
             // パターン1
             [function (array $attributes){
-                return (new EloquentAsEntity\TodoItem())->forceFill($attributes);
+                return (new Impls\EloquentAsEntity\TodoItem())->forceFill($attributes);
             }],
 
             // パターン2
             [function (array $attributes) {
-                return new EntityContainsEloquent\TodoItem((new EntityContainsEloquent\TodoItemRecord())->forceFill($attributes));
+                return new Impls\EntityContainsEloquent\TodoItem((new Impls\EntityContainsEloquent\TodoItemRecord())->forceFill($attributes));
             }],
 
             // パターン3
             [function (array $attributes) {
-                return new POPOAndEloquent\TodoItem(
+                return new Impls\POPOAndEloquent\TodoItem(
                     TodoItemId::of($attributes['id']),
                     Title::of($attributes['title']),
                     CompletedAt::of($attributes['completed_at'])
@@ -112,7 +114,7 @@ class TodoItemTest extends TestCase
 
             // パターン4
             [function (array $attributes) {
-                return new POPOAndQueryBuilder\TodoItem(
+                return new Impls\POPOAndQueryBuilder\TodoItem(
                     TodoItemId::of($attributes['id']),
                     Title::of($attributes['title']),
                     CompletedAt::of($attributes['completed_at'])
@@ -121,7 +123,7 @@ class TodoItemTest extends TestCase
 
             // パターン5
             [function (array $attributes) {
-                return new POPOAndPDO\TodoItem(
+                return new Impls\POPOAndPDO\TodoItem(
                     TodoItemId::of($attributes['id']),
                     Title::of($attributes['title']),
                     CompletedAt::of($attributes['completed_at'])
@@ -130,7 +132,7 @@ class TodoItemTest extends TestCase
 
             // パターン6
             [function (array $attributes) {
-                return new POPOAndAtlas\TodoItem(
+                return new Impls\POPOAndAtlas\TodoItem(
                     TodoItemId::of($attributes['id']),
                     Title::of($attributes['title']),
                     CompletedAt::of($attributes['completed_at'])

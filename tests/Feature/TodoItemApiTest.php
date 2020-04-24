@@ -17,6 +17,7 @@ class TodoItemApiTest extends TestCase
         /** @var Connection $conn */
         $conn = $this->app->make(DatabaseManager::class)->connection('sqlite');
         $conn->table('todo_items')->delete();
+        $conn->table('todo_items')->delete();
         $conn->unprepared("UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'todo_items'");
     }
 

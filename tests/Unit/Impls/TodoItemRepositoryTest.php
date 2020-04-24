@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-namespace N1215\LaraTodo\Impls;
+namespace N1215\LaraTodo\Unit\Impls;
 
 use Carbon\Carbon;
 use Illuminate\Database\Connection;
@@ -10,6 +11,7 @@ use Illuminate\Support\Collection;
 use N1215\LaraTodo\Common\TodoItemId;
 use N1215\LaraTodo\Common\TodoItemInterface;
 use N1215\LaraTodo\Common\TodoItemRepositoryInterface;
+use N1215\LaraTodo\Impls;
 use N1215\LaraTodo\TestCase;
 
 class TodoItemRepositoryTest extends TestCase
@@ -189,12 +191,12 @@ class TodoItemRepositoryTest extends TestCase
     public function dataProvider_repositoryClasses(): array
     {
         return [
-            [EloquentAsEntity\TodoItemRepository::class],
-            [EntityContainsEloquent\TodoItemRepository::class],
-            [POPOAndEloquent\TodoItemRepository::class],
-            [POPOAndQueryBuilder\TodoItemRepository::class],
-            [POPOAndPDO\TodoItemRepository::class],
-            [POPOAndAtlas\TodoItemRepository::class],
+            [Impls\EloquentAsEntity\TodoItemRepository::class],
+            [Impls\EntityContainsEloquent\TodoItemRepository::class],
+            [Impls\POPOAndEloquent\TodoItemRepository::class],
+            [Impls\POPOAndQueryBuilder\TodoItemRepository::class],
+            [Impls\POPOAndPDO\TodoItemRepository::class],
+            [Impls\POPOAndAtlas\TodoItemRepository::class],
         ];
     }
 }
