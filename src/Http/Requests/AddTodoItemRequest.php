@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace N1215\LaraTodo\Http\Requests;
@@ -10,7 +11,7 @@ class AddTodoItemRequest extends FormRequest
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -18,7 +19,7 @@ class AddTodoItemRequest extends FormRequest
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'title' => ['required', 'string', 'max:255'],

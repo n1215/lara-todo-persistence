@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace N1215\LaraTodo\Common;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 
 /**
  * Todo項目の完了日時
@@ -12,40 +14,40 @@ use Carbon\Carbon;
 final class CompletedAt
 {
     /**
-     * @var Carbon|null
+     * @var CarbonInterface|null
      */
     private $value;
 
     /**
      * コンストラクタ
-     * @param Carbon|null $value
+     * @param CarbonInterface|null $value
      */
-    private function __construct(?Carbon $value)
+    private function __construct(?CarbonInterface $value)
     {
         $this->value = $value;
     }
 
     /**
      * 値を取得
-     * @return Carbon|null
+     * @return CarbonInterface|null
      */
-    public function getValue(): ?Carbon
+    public function getValue(): ?CarbonInterface
     {
         return $this->value;
     }
 
     /**
      * 指定した値より過去かどうか
-     * @param Carbon|null $datetime
+     * @param CarbonInterface|null $datetime
      * @return bool
      */
-    public function isPast(?Carbon $datetime): bool
+    public function isPast(?CarbonInterface $datetime): bool
     {
-        if (is_null($datetime)) {
+        if ($datetime === null) {
             $datetime = Carbon::now();
         }
 
-        if (is_null($this->value)) {
+        if ($this->value === null) {
             return false;
         }
 
@@ -53,10 +55,10 @@ final class CompletedAt
     }
 
     /**
-     * @param Carbon|null $value
+     * @param CarbonInterface|null $value
      * @return CompletedAt
      */
-    public static function of(?Carbon $value): self
+    public static function of(?CarbonInterface $value): self
     {
         return new self($value);
     }

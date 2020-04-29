@@ -71,9 +71,11 @@ class TodoItemRepository implements TodoItemRepositoryInterface
             ->get();
 
         return collect($records)
-            ->map(function ($record) {
-                return $this->factory->fromArray((array)$record);
-            });
+            ->map(
+                function ($record) {
+                    return $this->factory->fromArray((array)$record);
+                }
+            );
     }
 
     /**
@@ -82,7 +84,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
     public function persist(TodoItemInterface $todoItem): TodoItemInterface
     {
         if (!$todoItem instanceof TodoItem) {
-            throw new InvalidArgumentException('このリポジトリで永続化できるエンティティは' . TodoItem::class. 'のみです');
+            throw new InvalidArgumentException('このリポジトリで永続化できるエンティティは' . TodoItem::class . 'のみです');
         }
 
         $rawId = $todoItem->getId()->getValue();
@@ -99,7 +101,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
         if ($rawId !== null) {
             try {
                 $this->conn->table(self::TABLE_NAME)->where('id', $rawId)->update($values);
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 throw new PersistenceException('Todo項目の永続化に失敗しました。title=' . $todoItem->getTitle()->getValue(), 0, $e);
             }
 
@@ -110,7 +112,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
         try {
             $values['created_at'] = $now;
             $rawId = $this->conn->table(self::TABLE_NAME)->insertGetId($values);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             throw new PersistenceException('Todo項目の永続化に失敗しました。title=' . $todoItem->getTitle()->getValue(), 0, $e);
         }
 

@@ -34,9 +34,11 @@ class TodoItemRepository implements TodoItemRepositoryInterface
     public function list(): Collection
     {
         return collect(TodoItemRecord::all()->all())
-            ->map(function (TodoItemRecord $record) {
-                return new TodoItem($record);
-            });
+            ->map(
+                function (TodoItemRecord $record) {
+                    return new TodoItem($record);
+                }
+            );
     }
 
     /**
@@ -45,7 +47,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
     public function persist(TodoItemInterface $todoItem): TodoItemInterface
     {
         if (!$todoItem instanceof TodoItem) {
-            throw new InvalidArgumentException('このリポジトリで永続化できるエンティティは' . TodoItem::class. 'のみです');
+            throw new InvalidArgumentException('このリポジトリで永続化できるエンティティは' . TodoItem::class . 'のみです');
         }
 
         $record = $todoItem->getRecord();

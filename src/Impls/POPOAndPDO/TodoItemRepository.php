@@ -12,6 +12,7 @@ use N1215\LaraTodo\Common\TodoItemId;
 use N1215\LaraTodo\Common\TodoItemInterface;
 use N1215\LaraTodo\Common\TodoItemRepositoryInterface;
 use N1215\LaraTodo\Exceptions\PersistenceException;
+use PDO;
 
 /**
  * POPOのエンティティのためのQuery Builderによるリポジトリ
@@ -34,14 +35,15 @@ class TodoItemRepository implements TodoItemRepositoryInterface
     private $factory;
 
     /**
-     * @var \PDO
+     * @var PDO
      */
     private $pdo;
 
     /**
-     * @inheritDoc
+     * @param TodoItemFactory $factory
+     * @param PDO $pdo
      */
-    public function __construct(TodoItemFactory $factory, \PDO $pdo)
+    public function __construct(TodoItemFactory $factory, PDO $pdo)
     {
         $this->factory = $factory;
         $this->pdo = $pdo;
@@ -71,14 +73,15 @@ class TodoItemRepository implements TodoItemRepositoryInterface
      */
     public function list(): Collection
     {
-        $statement = $this->pdo->prepare(self::SQL_SELECT_ALL);
-        $statement->execute();
+        $statement = $this->pdo->query(self::SQL_SELECT_ALL);
         $records = $statement->fetchAll();
 
         return collect($records)
-            ->map(function (array $record) {
-                return $this->factory->fromArray($record);
-            });
+            ->map(
+                function (array $record) {
+                    return $this->factory->fromArray($record);
+                }
+            );
     }
 
     /**
@@ -87,7 +90,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
     public function persist(TodoItemInterface $todoItem): TodoItemInterface
     {
         if (!$todoItem instanceof TodoItem) {
-            throw new InvalidArgumentException('このリポジトリで永続化できるエンティティは' . TodoItem::class. 'のみです');
+            throw new InvalidArgumentException('このリポジトリで永続化できるエンティティは' . TodoItem::class . 'のみです');
         }
 
         $rawId = $todoItem->getId()->getValue();
@@ -108,7 +111,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
                 $statement->bindParam(':updated_at', $now);
                 $statement->bindParam(':id', $rawId);
                 $statement->execute();
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 throw new PersistenceException('Todo項目の永続化に失敗しました。title=' . $todoItem->getTitle()->getValue(), 0, $e);
             }
 
@@ -124,7 +127,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
             $statement->bindParam(':updated_at', $now);
             $statement->execute();
             $rawId = $this->pdo->lastInsertId();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             throw new PersistenceException('Todo項目の永続化に失敗しました。title=' . $todoItem->getTitle()->getValue(), 0, $e);
         }
 

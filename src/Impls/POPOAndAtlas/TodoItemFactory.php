@@ -26,7 +26,7 @@ class TodoItemFactory
     public function fromRecord(TodoItemRecord $record): TodoItemInterface
     {
         return new TodoItem(
-            TodoItemId::of((int) $record->id),
+            TodoItemId::of((int)$record->id),
             Title::of($record->title),
             CompletedAt::of(isset($record->completed_at) ? new Carbon($record->completed_at) : null)
         );
@@ -40,7 +40,7 @@ class TodoItemFactory
     public function fromArray(array $record): TodoItem
     {
         return new TodoItem(
-            TodoItemId::of(isset($record['id']) ? (int) $record['id'] : null),
+            TodoItemId::of(isset($record['id']) ? (int)$record['id'] : null),
             Title::of($record['title']),
             CompletedAt::of(isset($record['completed_at']) ? new Carbon($record['completed_at']) : null)
         );

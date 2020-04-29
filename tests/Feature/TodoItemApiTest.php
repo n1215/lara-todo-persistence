@@ -29,7 +29,7 @@ class TodoItemApiTest extends TestCase
     {
         $this->app->forgetInstance(TodoItemRepositoryInterface::class);
         $this->app->singleton(TodoItemRepositoryInterface::class, $repositoryClass);
-        
+
         $response = $this->get('/todo');
         $response->assertStatus(200);
         $response->assertJson([]);
@@ -51,9 +51,11 @@ class TodoItemApiTest extends TestCase
 
         $response = $this->get('/todo');
         $response->assertStatus(200);
-        $response->assertJson([
-            ['id' => 1, 'title' => $title, 'is_completed' => true]
-        ]);
+        $response->assertJson(
+            [
+                ['id' => 1, 'title' => $title, 'is_completed' => true]
+            ]
+        );
 
         $title2 = 'dummy_title2';
         $response = $this->postJson('/todo', ['title' => $title2]);
@@ -63,12 +65,14 @@ class TodoItemApiTest extends TestCase
 
         $response = $this->get('/todo');
         $response->assertStatus(200);
-        $response->assertJson([
-            ['id' => 1, 'title' => $title, 'is_completed' => true],
-            ['id' => 2, 'title' => $title2, 'is_completed' => false]
-        ]);
+        $response->assertJson(
+            [
+                ['id' => 1, 'title' => $title, 'is_completed' => true],
+                ['id' => 2, 'title' => $title2, 'is_completed' => false]
+            ]
+        );
     }
-    
+
     public function dataProvider_repositoryClasses(): array
     {
         return [

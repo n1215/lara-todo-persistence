@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace N1215\LaraTodo\Http\Responders;
 
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -53,15 +55,17 @@ class TodoItemResponder
 
     /**
      * エラーのレスポンスを返す
-     * @param \Exception $e
+     * @param Exception $e
      * @param int $status
      * @return JsonResponse
      */
-    public function error(\Exception $e, $status = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
+    public function error(Exception $e, $status = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
     {
-        return new JsonResponse([
-            'message' => $e->getMessage(),
-            'code' => $e->getCode(),
-        ], $status);
+        return new JsonResponse(
+            [
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ], $status
+        );
     }
 }

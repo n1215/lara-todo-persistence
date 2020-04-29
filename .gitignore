@@ -7,4 +7,5 @@
 composer.lock
 vendor/
 .phpunit.result.cache
-tests/boostrap/cache
+tests/bootstrap/cache
+tests/database/*.sqlite

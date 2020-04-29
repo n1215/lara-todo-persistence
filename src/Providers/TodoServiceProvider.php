@@ -9,6 +9,7 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use N1215\LaraTodo\Common\TodoItemRepositoryInterface;
 use N1215\LaraTodo\Impls;
+use PDO;
 
 /**
  * Class TodoServiceProvider
@@ -55,23 +56,31 @@ class TodoServiceProvider extends ServiceProvider
     public function register(): void
     {
         // リポジトリの実装切り替え
-        $this->app->singleton(TodoItemRepositoryInterface::class, function (Container $app) {
-            return $app->make($this->repositoryClasses[config('laratodo.impl')]);
-        });
+        $this->app->singleton(
+            TodoItemRepositoryInterface::class,
+            function (Container $app) {
+                return $app->make($this->repositoryClasses[config('laratodo.impl')]);
+            }
+        );
 
         // PDO用の設定
         $this->app->singleton(Impls\POPOAndPDO\TodoItemRepository::class);
         $this->app->when(Impls\POPOAndPDO\TodoItemRepository::class)
-            ->needs(\PDO::class)
-            ->give(function () {
-                return new \PDO('sqlite:'. config('database.connections.sqlite.database'));
-            });
+            ->needs(PDO::class)
+            ->give(
+                function () {
+                    return new PDO('sqlite:' . config('database.connections.sqlite.database'));
+                }
+            );
 
         // Atlas用の設定
-        $this->app->singleton(Atlas::class, function () {
-            return Atlas::new(
-                'sqlite:'. config('database.connections.sqlite.database')
-            );
-        });
+        $this->app->singleton(
+            Atlas::class,
+            function () {
+                return Atlas::new(
+                    'sqlite:' . config('database.connections.sqlite.database')
+                );
+            }
+        );
     }
 }

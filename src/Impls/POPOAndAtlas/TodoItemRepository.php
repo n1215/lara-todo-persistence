@@ -70,9 +70,11 @@ class TodoItemRepository implements TodoItemRepositoryInterface
             ->fetchRecords();
 
         return collect($records)
-            ->map(function (TodoItemRecord $record) {
-                return $this->factory->fromRecord($record);
-            });
+            ->map(
+                function (TodoItemRecord $record) {
+                    return $this->factory->fromRecord($record);
+                }
+            );
     }
 
     /**
@@ -81,7 +83,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
     public function persist(TodoItemInterface $todoItem): TodoItemInterface
     {
         if (!$todoItem instanceof TodoItem) {
-            throw new InvalidArgumentException('このリポジトリで永続化できるエンティティは' . TodoItem::class. 'のみです');
+            throw new InvalidArgumentException('このリポジトリで永続化できるエンティティは' . TodoItem::class . 'のみです');
         }
 
         $now = Carbon::now()->format('Y-m-d H:i:s');

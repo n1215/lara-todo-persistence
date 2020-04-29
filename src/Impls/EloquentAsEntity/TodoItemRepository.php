@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1215\LaraTodo\Impls\EloquentAsEntity;
 
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
 use N1215\LaraTodo\Common\TodoItemId;
 use N1215\LaraTodo\Common\TodoItemInterface;
 use N1215\LaraTodo\Common\TodoItemRepositoryInterface;
@@ -40,7 +41,7 @@ class TodoItemRepository implements TodoItemRepositoryInterface
     public function persist(TodoItemInterface $todoItem): TodoItemInterface
     {
         if (!$todoItem instanceof TodoItem) {
-            throw new \InvalidArgumentException('このリポジトリで永続化できるエンティティは' . TodoItem::class. 'のみです');
+            throw new InvalidArgumentException('このリポジトリで永続化できるエンティティは' . TodoItem::class . 'のみです');
         }
 
         if (!$todoItem->save()) {

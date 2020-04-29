@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace N1215\LaraTodo\Presentations;
@@ -31,8 +32,11 @@ class TodoItemJsonSerializer
      */
     public function serializeCollection(Collection $todoItems): array
     {
-        return array_map(function (TodoItemInterface $todoItem) {
-            return $this->serialize($todoItem);
-        }, $todoItems->all());
+        return array_map(
+            function (TodoItemInterface $todoItem) {
+                return $this->serialize($todoItem);
+            },
+            $todoItems->all()
+        );
     }
 }
